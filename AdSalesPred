@@ -1,0 +1,32 @@
+import numpy as np
+import pandas as pd
+df=pd.read_csv("DigitalAd_dataset.csv")
+df.head(10)
+df.size
+df.shape
+X=df.iloc[:,:-1]
+X.head(5)
+Y=df.iloc[:,-1]
+Y.head(5)
+from sklearn.preprocessing import MinMaxScaler
+MM=MinMaxScaler()
+X=MM.fit_transform(X)
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X,Y,test_size=0.25,random_state=40) 
+from sklearn.linear_model import LogisticRegression
+model=LogisticRegression()
+model.fit(X_train,y_train)
+age=int(input("enter the Age: "))
+Salary=int(input("enter the Salary: "))
+output=[[age,Salary]]
+result = model.predict(MM.transform(output))
+if result==1:
+  print("Customer is likely to buy the product") 
+else:
+  print("Customer is not likely to buy the product")
+y_pred=model.predict(X_test)
+from sklearn.metrics import confusion_matrix,accuracy_score
+Cm=confusion_matrix(y_test,y_pred)
+print(Cm)
+ac=accuracy_score(y_test,y_pred)
+print(ac*100)
